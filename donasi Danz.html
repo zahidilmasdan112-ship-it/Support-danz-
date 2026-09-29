@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support Danz - Donasi QRIS</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#e63946;--primary-dark:#c1121f;--wa:#25D366;--wa-dark:#128C7E;--text:#212529}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:linear-gradient(135deg,#1d3557 0%,#457b9d 100%);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;color:var(--text)}
+.container{background:#fff;width:100%;max-width:420px;border-radius:24px;box-shadow:0 15px 35px rgba(0,0,0,.3);overflow:hidden;animation:fadeIn .5s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);padding:30px 20px;text-align:center;color:#fff;border-bottom-left-radius:50px;border-bottom-right-radius:50px;box-shadow:0 5px 15px rgba(230,57,70,.3);position:relative}
+.header h1{font-size:24px;font-weight:700;margin-bottom:5px}
+.header p{font-size:14px;opacity:.9;font-weight:300}
+.setup-btn{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.2);color:#fff;border:none;padding:5px 10px;border-radius:20px;font-size:10px;cursor:pointer;transition:all .2s}
+.setup-btn:hover{background:rgba(255,255,255,.4)}
+.content{padding:30px 25px}
+.info-text{text-align:center;margin-bottom:20px;font-size:13px;color:#6c757d;line-height:1.6}
+.info-text strong{color:var(--primary)}
+.form-group{margin-bottom:15px}
+.form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#495057}
+.form-group input,.form-group textarea{width:100%;padding:12px 15px;border:2px solid #e9ecef;border-radius:12px;font-size:14px;outline:none;transition:all .3s;background:#f8f9fa;font-family:'Poppins',sans-serif}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 4px rgba(230,57,70,.1)}
+.form-group textarea{resize:vertical;min-height:60px}
+.input-wrapper{position:relative;display:flex;align-items:center}
+.input-wrapper span{position:absolute;left:15px;font-weight:600;color:#adb5bd;font-size:16px}
+.input-wrapper input{padding-left:42px;font-weight:600;letter-spacing:.5px}
+.preset-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.preset-buttons button{padding:8px;border:1px solid #dee2e6;background:#fff;border-radius:8px;font-size:12px;font-weight:600;color:#495057;cursor:pointer;transition:all .2s}
+.preset-buttons button:hover,.preset-buttons button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-wa,.btn-qris{width:100%;padding:15px;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:transform .2s,box-shadow .2s;display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:12px}
+.btn-wa{background:linear-gradient(135deg,var(--wa) 0%,var(--wa-dark) 100%);box-shadow:0 4px 15px rgba(37,211,102,.4)}
+.btn-wa:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(37,211,102,.6)}
+.btn-qris{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);box-shadow:0 4px 15px rgba(230,57,70,.4)}
+.btn-qris:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(230,57,70,.6)}
+.btn-download{width:100%;padding:14px;background:#f8f9fa;color:var(--text);border:2px solid #dee2e6;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:12px}
+.btn-download:hover{background:#e9ecef;border-color:#adb5bd}
+.section{display:none;animation:fadeIn .5s ease-out}
+.section.active{display:block}
+.amount-display{font-size:26px;font-weight:700;color:var(--primary);margin-bottom:20px;text-align:center}
+.qr-image-box{background:#f8f9fa;padding:15px;border-radius:16px;border:2px dashed #dee2e6;margin-bottom:20px;text-align:center;min-height:200px;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.qr-image-box img{width:100%;max-width:280px;height:auto;border-radius:8px;display:none}
+.qr-placeholder{color:#adb5bd;font-size:13px;text-align:center;padding:20px}
+.instruction{font-size:12px;color:#6c757d;margin-bottom:20px;line-height:1.5;background:#fff3cd;padding:12px;border-radius:8px;border-left:4px solid #ffc107;text-align:left}
+.btn-back{background:transparent;border:2px solid #dee2e6;color:#6c757d;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;width:100%;transition:all .2s;margin-bottom:10px}
+.btn-back:hover{background:#f8f9fa;border-color:#adb5bd;color:#212529}
+.footer{text-align:center;padding:15px;font-size:11px;color:#adb5bd;border-top:1px solid #e9ecef}
+.success-icon{font-size:40px;text-align:center;margin-bottom:10px}
+.center-text{text-align:center;margin-bottom:15px;font-size:14px;color:#6c757d}
+.admin-menu{display:flex;flex-direction:column;gap:12px;margin-top:10px}
+.admin-btn{padding:16px;border-radius:12px;border:none;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s}
+.admin-btn-add{background:linear-gradient(135deg,#2a9d8f 0%,#21867a 100%);color:#fff;box-shadow:0 4px 12px rgba(42,157,143,.3)}
+.admin-btn-add:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(42,157,143,.5)}
+.admin-btn-change{background:linear-gradient(135deg,#f4a261 0%,#e76f51 100%);color:#fff;box-shadow:0 4px 12px rgba(244,162,97,.3)}
+.admin-btn-change:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(244,162,97,.5)}
+.admin-btn-delete{background:linear-gradient(135deg,#e63946 0%,#c1121f 100%);color:#fff;box-shadow:0 4px 12px rgba(230,57,70,.3)}
+.admin-btn-delete:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(230,57,70,.5)}
+.admin-btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.admin-status{background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:12px;font-size:12px;color:#075985;margin-bottom:15px;text-align:center;font-weight:600}
+.admin-status.has-qr{background:#dcfce7;border-color:#86efac;color:#166534}
+.admin-status.no-qr{background:#fef3c7;border-color:#fde68a;color:#92400e}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>Support Danz</h1>
+<p>Terima kasih atas dukungan Anda!</p>
+<button class="setup-btn" id="setup-btn" onclick="bukaAdmin()">⚙️ Admin</button>
+<input type="file" id="qrFileInput" accept="image/*" style="display:none">
+</div>
+
+<!-- HALAMAN FORM DONASI -->
+<div class="content section active" id="form-section">
+<p class="info-text">Isi data di bawah ini, lalu kirim konfirmasi ke WhatsApp saya.</p>
+<div class="form-group"><label for="name">Nama Anda</label><input type="text" id="name" placeholder="Masukkan nama atau nickname"></div>
+<div class="form-group"><label for="message">Pesan / Doa (Opsional)</label><textarea id="message" placeholder="Tulis pesan atau doa untuk Danz..."></textarea></div>
+<div class="form-group">
+<label for="amount">Nominal Donasi (Rp100 - Rp100.000)</label>
+<div class="input-wrapper">
+<span>Rp</span>
+<input type="text" id="amount" inputmode="numeric" placeholder="Contoh: 100000" autocomplete="off">
+</div>
+</div>
+<div class="preset-buttons">
+<button onclick="setAmount(1000)">1.000</button>
+<button onclick="setAmount(5000)">5.000</button>
+<button onclick="setAmount(10000)">10.000</button>
+<button onclick="setAmount(25000)">25.000</button>
+<button onclick="setAmount(50000)">50.000</button>
+<button onclick="setAmount(100000)">100.000</button>
+</div>
+<button class="btn-wa" onclick="kirimKeWA()">📱 Kirim Konfirmasi ke WhatsApp</button>
+</div>
+
+<!-- HALAMAN KONFIRMASI -->
+<div class="content section" id="confirm-section">
+<div class="success-icon">✅</div>
+<h2 style="text-align:center;font-size:20px;margin-bottom:8px;">Konfirmasi Terkirim!</h2>
+<p class="center-text">Donasi Anda sebesar:</p>
+<div class="amount-display" id="confirm-amount">Rp0</div>
+<p class="center-text">Silakan klik tombol di bawah untuk melihat QR Code pembayaran.</p>
+<button class="btn-qris" onclick="tampilkanQR()">💳 Bayar Manual via QRIS</button>
+<button class="btn-back" onclick="kembaliKeForm()">Ubah Nominal / Data</button>
+</div>
+
+<!-- HALAMAN QR CODE -->
+<div class="content section" id="qr-section">
+<h2 style="text-align:center;font-size:18px;margin-bottom:5px;">Scan QRIS di Bawah Ini</h2>
+<p class="center-text">Nominal donasi: <strong id="qr-amount" style="color:#e63946;">Rp0</strong></p>
+<div class="qr-image-box">
+<img src="" alt="QRIS Danz" id="qr-image">
+<div class="qr-placeholder" id="qr-placeholder">Gambar QRIS belum diatur.</div>
+</div>
+<button class="btn-download" onclick="downloadQR()">⬇️ Download QR (JPG)</button>
+<div class="instruction">
+<strong>Cara Donasi:</strong><br>
+1. Download QR di atas (klik tombol Download).<br>
+2. Buka aplikasi E-Wallet (GoPay, OVO, DANA, ShopeePay, LinkAja) atau Mobile Banking.<br>
+3. Pilih menu <strong>Scan QRIS</strong> → Upload dari Galeri.<br>
+4. Masukkan nominal <strong id="instruction-amount">Rp0</strong> secara manual.<br>
+5. Selesaikan pembayaran.
+</div>
+<button class="btn-back" onclick="kembaliKeConfirm()">⬅ Kembali</button>
+</div>
+
+<!-- HALAMAN ADMIN MENU -->
+<div class="content section" id="admin-section">
+<div class="success-icon">⚙️</div>
+<h2 style="text-align:center;font-size:20px;margin-bottom:15px;">Menu Admin</h2>
+<div class="admin-status" id="admin-status">Memuat status...</div>
+<div class="admin-menu">
+<button class="admin-btn admin-btn-add" id="btn-add" onclick="tambahQR()">➕ TAMBAHKAN QR</button>
+<button class="admin-btn admin-btn-change" id="btn-change" onclick="gantiQR()">🔄 GANTI QR</button>
+<button class="admin-btn admin-btn-delete" id="btn-delete" onclick="hapusQR()">🗑️ HAPUS QR</button>
+</div>
+<button class="btn-back" style="margin-top:15px" onclick="tutupAdmin()">⬅ Kembali ke Donasi</button>
+</div>
+
+<div class="footer">&copy; 2026 Support Danz. All rights reserved.</div>
+</div>
+
+<script>
+// ==========================================
+// KONFIGURASI
+// ==========================================
+const ADMIN_PASSWORD = "support danz";
+const NOMOR_WA = "6281249254145";
+let currentAmount = 0;
+
+const qrInput = document.getElementById('qrFileInput');
+const qrImage = document.getElementById('qr-image');
+const qrPlaceholder = document.getElementById('qr-placeholder');
+const amountInput = document.getElementById('amount');
+let currentAction = "";
+
+// ==========================================
+// FUNGSI UTIL: BERSIHKAN ANGKA
+// ==========================================
+// Hapus semua karakter selain angka (titik, spasi, koma, dll)
+function cleanNumber(str) {
+    return String(str).replace(/[^0-9]/g, '');
+}
+
+// Format angka jadi ribuan untuk tampilan (100000 → 100.000)
+function formatThousand(num) {
+    return String(num).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+// Format Rupiah lengkap
+function formatRupiah(a) {
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency', currency: 'IDR', minimumFractionDigits: 0
+    }).format(a);
+}
+
+// ==========================================
+// AUTO-FORMAT INPUT SAAT USER KETIK
+// ==========================================
+amountInput.addEventListener('input', function() {
+    // Ambil hanya angka
+    const raw = cleanNumber(this.value);
+    
+    // Tampilkan dengan titik ribuan
+    if (raw === '') {
+        this.value = '';
+    } else {
+        this.value = formatThousand(raw);
+    }
+    
+    // Hapus highlight tombol preset
+    document.querySelectorAll('.preset-buttons button').forEach(b => b.classList.remove('active'));
+});
+
+// ==========================================
+// CEK STATUS QR SAAT HALAMAN DIBUKA
+// ==========================================
+window.addEventListener('load', function() {
+    const savedQR = localStorage.getItem('qrisDanz');
+    if (savedQR) {
+        qrImage.src = savedQR;
+        qrImage.style.display = 'block';
+        qrPlaceholder.style.display = 'none';
+    }
+});
+
+// ==========================================
+// MENU ADMIN
+// ==========================================
+function bukaAdmin() {
+    const pass = prompt('🔐 Masukkan Password Admin:');
+    if (pass === null) return;
+    if (pass !== ADMIN_PASSWORD) {
+        alert('❌ Password salah! Akses ditolak.');
+        return;
+    }
+    refreshStatus();
+    showSection('admin-section');
+}
+
+function tutupAdmin() { showSection('form-section'); }
+
+function refreshStatus() {
+    const savedQR = localStorage.getItem('qrisDanz');
+    const statusEl = document.getElementById('admin-status');
+    const btnAdd = document.getElementById('btn-add');
+    const btnChange = document.getElementById('btn-change');
+    const btnDelete = document.getElementById('btn-delete');
+    
+    if (savedQR) {
+        statusEl.className = 'admin-status has-qr';
+        statusEl.innerText = '✅ QRIS sudah terpasang & aktif';
+        btnAdd.disabled = true;
+        btnChange.disabled = false;
+        btnDelete.disabled = false;
+    } else {
+        statusEl.className = 'admin-status no-qr';
+        statusEl.innerText = '⚠️ QRIS belum terpasang';
+        btnAdd.disabled = false;
+        btnChange.disabled = true;
+        btnDelete.disabled = true;
+    }
+}
+
+function tambahQR() {
+    if (localStorage.getItem('qrisDanz')) {
+        alert('QRIS sudah ada. Gunakan menu "GANTI QR" untuk mengganti.');
+        return;
+    }
+    currentAction = "add";
+    alert('Silakan pilih gambar QRIS dari galeri Anda.');
+    qrInput.click();
+}
+
+function gantiQR() {
+    if (!localStorage.getItem('qrisDanz')) {
+        alert('Belum ada QRIS. Gunakan menu "TAMBAHKAN QR" terlebih dahulu.');
+        return;
+    }
+    if (!confirm('Yakin ingin mengganti QRIS yang sedang aktif?')) return;
+    currentAction = "change";
+    alert('Silakan pilih gambar QRIS BARU dari galeri Anda.');
+    qrInput.click();
+}
+
+function hapusQR() {
+    if (!localStorage.getItem('qrisDanz')) {
+        alert('Tidak ada QRIS yang tersimpan.');
+        return;
+    }
+    if (!confirm('⚠️ Yakin ingin MENGHAPUS QRIS?\n\nSetelah dihapus, QR tidak akan muncul sampai Anda menambahkan yang baru.')) return;
+    
+    localStorage.removeItem('qrisDanz');
+    localStorage.removeItem('qrisLockedAt');
+    qrImage.src = '';
+    qrImage.style.display = 'none';
+    qrPlaceholder.style.display = 'block';
+    alert('🗑️ QRIS berhasil dihapus!');
+    refreshStatus();
+}
+
+qrInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    qrInput.value = '';
+    
+    if (!file.type.startsWith('image/')) {
+        alert('❌ File harus berupa gambar (JPG/PNG).');
+        return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+        alert('❌ Ukuran gambar terlalu besar (max 2MB). Silakan kompres dulu.');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const base64 = event.target.result;
+        localStorage.setItem('qrisDanz', base64);
+        localStorage.setItem('qrisLockedAt', new Date().toISOString());
+        
+        qrImage.src = base64;
+        qrImage.style.display = 'block';
+        qrPlaceholder.style.display = 'none';
+        
+        if (currentAction === "add") alert('✅ QRIS berhasil ditambahkan!');
+        else if (currentAction === "change") alert('✅ QRIS berhasil diganti!');
+        
+        currentAction = "";
+        refreshStatus();
+    };
+    reader.readAsDataURL(file);
+});
+
+// ==========================================
+// TOMBOL PRESET NOMINAL
+// ==========================================
+function setAmount(v){
+    amountInput.value = formatThousand(v);
+    document.querySelectorAll('.preset-buttons button').forEach(b => {
+        b.classList.remove('active');
+        if(b.innerText.replace('.','') == v) b.classList.add('active');
+    });
+}
+
+// ==========================================
+// KIRIM KE WHATSAPP
+// ==========================================
+function kirimKeWA(){
+    const name = document.getElementById('name').value.trim();
+    const msg = document.getElementById('message').value.trim();
+    
+    // ✅ FIX BUG: bersihkan dulu sebelum parseInt
+    const rawInput = cleanNumber(amountInput.value);
+    
+    if(!name){alert('Mohon isi Nama Anda terlebih dahulu!');return}
+    if(!rawInput || rawInput === ''){alert('Mohon isi Nominal Donasi terlebih dahulu!');return}
+    
+    const amount = parseInt(rawInput, 10);
+    
+    if(isNaN(amount) || amount < 100){
+        alert('Maaf, minimal donasi adalah Rp100.');
+        return;
+    }
+    if(amount > 100000){
+        alert('Maaf, maksimal donasi adalah Rp100.000.');
+        return;
+    }
+    
+    currentAmount = amount;
+    const f = formatRupiah(amount);
+    
+    let t = `Halo Danz, saya ingin berdonasi.\n\n`;
+    t += `*Nama:* ${name}\n`;
+    t += `*Nominal:* ${f}\n`;
+    if(msg) t += `*Pesan:* ${msg}\n`;
+    t += `\nMohon konfirmasinya ya. Terima kasih! 🙏`;
+    
+    window.open(`https://wa.me/${NOMOR_WA}?text=${encodeURIComponent(t)}`,'_blank');
+    
+    document.getElementById('confirm-amount').innerText = f;
+    showSection('confirm-section');
+}
+
+function tampilkanQR(){
+    if (!localStorage.getItem('qrisDanz')) {
+        alert('⚠️ QRIS belum diatur oleh admin.\nSilakan hubungi admin untuk setup.');
+        return;
+    }
+    const f = formatRupiah(currentAmount);
+    document.getElementById('qr-amount').innerText = f;
+    document.getElementById('instruction-amount').innerText = f;
+    showSection('qr-section');
+}
+
+function kembaliKeForm(){showSection('form-section')}
+function kembaliKeConfirm(){showSection('confirm-section')}
+
+function showSection(id){
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function downloadQR(){
+    const img = document.getElementById('qr-image');
+    if(!img.src || img.style.display === 'none' || !img.complete || img.naturalWidth === 0){
+        alert('⚠️ Gambar QR belum ada.');
+        return;
+    }
+    const c = document.createElement('canvas');
+    const x = c.getContext('2d');
+    c.width = img.naturalWidth;
+    c.height = img.naturalHeight;
+    x.fillStyle = '#FFFFFF';
+    x.fillRect(0,0,c.width,c.height);
+    x.drawImage(img,0,0);
+    const j = c.toDataURL('image/jpeg',0.95);
+    const l = document.createElement('a');
+    l.download = `QRIS-Danz-${currentAmount}.jpg`;
+    l.href = j;
+    document.body.appendChild(l);
+    l.click();
+    document.body.removeChild(l);
+}
+</script>
+</body>
+</html>
